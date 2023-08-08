@@ -221,23 +221,3 @@ class InventoryTypeRetrieveUpdateDestroyView(APIView):
     def get_queryset(self, **kwargs):
         return self.queryset.get(**kwargs)
 
-
-class InventoryAfterDateView(APIView):
-    """
-    example call: /inventory/after-date/?after_date=2023-08-14. Will not include Lord of the Rings
-    """
-    from interview.order.models import Order
-    from interview.order.serializers import OrderSerializer, OrderInventorySerializer
-
-    queryset = Order.objects.all()
-    serializer_class = OrderInventorySerializer
-
-    def get(self, request, *args, **kwargs) -> Response:
-        from django.utils.dateparse import parse_date
-        after_date = request.query_params.get('after_date', None)
-
-        after_date = parse_date(after_date)
-        query_set = self.queryset.filter(start_date__gt=after_date)
-        serializer = self.serializer_class(query_set, many=True)
-        return Response(serializer.data, status=200)
-
