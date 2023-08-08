@@ -19,3 +19,11 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'inventory', 'start_date', 'embargo_date', 'tags', 'is_active']
 
+
+class OrderIsActiveSerializer(serializers.ModelSerializer):
+    inventory = InventorySerializer()
+    
+    class Meta:
+        model = Order
+        fields = ['id', 'inventory', 'is_active']
+
